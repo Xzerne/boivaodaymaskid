@@ -9682,8 +9682,7 @@ end
 
         
         
-        
-function CheckBoat()
+      function CheckBoat()
     for i, v in pairs(game:GetService("Workspace").Boats:GetChildren()) do
         if v.Name == _G.SelectedBoat then
             for _, child in pairs(v:GetChildren()) do
@@ -9783,9 +9782,12 @@ end
             pcall(function()
                 if _G.SailBoat then
                         if not CheckBoat() then
-                            
-                                buyb = TPP(CFrame.new(-16927.451171875, 9.0863618850708, 433.8642883300781))
-                            
+                            local BuyBoatCFrame = CFrame.new(-16927.451171875, 9.0863618850708, 433.8642883300781)
+                            if (BuyBoatCFrame.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude > 1000 then
+                                BTP(BuyBoatCFrame)
+                            else
+                                buyb = TPP(BuyBoatCFrame)
+                            end
                             if (CFrame.new(-16927.451171875, 9.0863618850708, 433.8642883300781).Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <= 10 then
                                 if buyb then buyb:Stop() end
                                 game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("BuyBoat", _G.SelectedBoat)
@@ -9809,9 +9811,9 @@ end
                                         end
                                     else
                                         repeat wait()
-                                       TPB(CFrameSelectedZone)                                        until ((game:GetService("Workspace").Enemies:FindFirstChild("Shark") and _G.AutoKillShark) or (game:GetService("Workspace").Enemies:FindFirstChild("Terrorshark") and _G.AutoTerrorshark) or (game:GetService("Workspace").Enemies:FindFirstChild("Piranha") and _G.AutoKillPiranha) or (game:GetService("Workspace").Enemies:FindFirstChild("Fish Crew Member") and _G.AutoKillFishCrew) or (workspace.Enemies:FindFirstChild("FishBoat") and _G.RelzFishBoat) or (workspace.Enemies:FindFirstChild("PirateBrigade") and _G.RelzPirateBrigade) or (workspace.Enemies:FindFirstChild("PirateGrandBrigade") and _G.RelzPirateGrandBrigade) or (CheckSeaBeast() and _G.AutoSeaBest)) or game.Players.LocalPlayer.Character:WaitForChild("Humanoid").Sit == false or _G.SailBoat == false
-                                   
-                                   
+                                            local stopboat = TPB(CFrameSelectedZone, v.VehicleSeat)
+                                        until ((game:GetService("Workspace").Enemies:FindFirstChild("Shark") and _G.AutoKillShark) or (game:GetService("Workspace").Enemies:FindFirstChild("Terrorshark") and _G.AutoTerrorshark) or (game:GetService("Workspace").Enemies:FindFirstChild("Piranha") and _G.AutoKillPiranha) or (game:GetService("Workspace").Enemies:FindFirstChild("Fish Crew Member") and _G.AutoKillFishCrew) or (workspace.Enemies:FindFirstChild("FishBoat") and _G.RelzFishBoat) or (workspace.Enemies:FindFirstChild("PirateBrigade") and _G.RelzPirateBrigade) or (workspace.Enemies:FindFirstChild("PirateGrandBrigade") and _G.RelzPirateGrandBrigade) or (CheckSeaBeast() and _G.AutoSeaBest)) or game.Players.LocalPlayer.Character:WaitForChild("Humanoid").Sit == false or _G.SailBoat == false
+                                        if stopboat then stopboat:Stop() end
                                         game:GetService("VirtualInputManager"):SendKeyEvent(true, 32, false, game)
                                         wait(0.1)
                                         game:GetService("VirtualInputManager"):SendKeyEvent(false, 32, false, game)
@@ -9840,8 +9842,6 @@ end
                     end
                 end)
             end)
-            
-            
 
     spawn(function()
         while wait() do
@@ -9998,6 +9998,7 @@ end
             end)
         end
     end)
+        
     
 
 Page5.CreateToggle({
