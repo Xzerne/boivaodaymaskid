@@ -9809,8 +9809,9 @@ end
                                         end
                                     else
                                         repeat wait()
-                                            local stopboat = TPB(CFrameSelectedZone)                                        until ((game:GetService("Workspace").Enemies:FindFirstChild("Shark") and _G.AutoKillShark) or (game:GetService("Workspace").Enemies:FindFirstChild("Terrorshark") and _G.AutoTerrorshark) or (game:GetService("Workspace").Enemies:FindFirstChild("Piranha") and _G.AutoKillPiranha) or (game:GetService("Workspace").Enemies:FindFirstChild("Fish Crew Member") and _G.AutoKillFishCrew) or (workspace.Enemies:FindFirstChild("FishBoat") and _G.RelzFishBoat) or (workspace.Enemies:FindFirstChild("PirateBrigade") and _G.RelzPirateBrigade) or (workspace.Enemies:FindFirstChild("PirateGrandBrigade") and _G.RelzPirateGrandBrigade) or (CheckSeaBeast() and _G.AutoSeaBest)) or game.Players.LocalPlayer.Character:WaitForChild("Humanoid").Sit == false or _G.SailBoat == false
-                                        if stopboat then stopboat:Stop() end
+                                       TPB(CFrameSelectedZone)                                        until ((game:GetService("Workspace").Enemies:FindFirstChild("Shark") and _G.AutoKillShark) or (game:GetService("Workspace").Enemies:FindFirstChild("Terrorshark") and _G.AutoTerrorshark) or (game:GetService("Workspace").Enemies:FindFirstChild("Piranha") and _G.AutoKillPiranha) or (game:GetService("Workspace").Enemies:FindFirstChild("Fish Crew Member") and _G.AutoKillFishCrew) or (workspace.Enemies:FindFirstChild("FishBoat") and _G.RelzFishBoat) or (workspace.Enemies:FindFirstChild("PirateBrigade") and _G.RelzPirateBrigade) or (workspace.Enemies:FindFirstChild("PirateGrandBrigade") and _G.RelzPirateGrandBrigade) or (CheckSeaBeast() and _G.AutoSeaBest)) or game.Players.LocalPlayer.Character:WaitForChild("Humanoid").Sit == false or _G.SailBoat == false
+                                   
+                                   
                                         game:GetService("VirtualInputManager"):SendKeyEvent(true, 32, false, game)
                                         wait(0.1)
                                         game:GetService("VirtualInputManager"):SendKeyEvent(false, 32, false, game)
