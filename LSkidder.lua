@@ -1545,23 +1545,7 @@ function library.Create(options)
 					ScrollingFrame_2.CanvasSize = UDim2.new(0, 0, 0, UIListLayout_4.AbsoluteContentSize.Y + 35)
 				end)
 
-				ImageButton.MouseButton1Click:Connect(function()
-					if not DropG then
-						DropG = true
-						TweenService:Create(
-							Dropdown,
-							TweenInfo.new(0.4,Enum.EasingStyle.Back,Enum.EasingDirection.Out),
-							{Size = UDim2.new(0.949999988, 0, 0, 30)}
-						):Play()
-					else
-						DropG = false
-						TweenService:Create(
-							Dropdown,
-							TweenInfo.new(0.4,Enum.EasingStyle.Back,Enum.EasingDirection.Out),
-							{Size = UDim2.new(0.949999988, 0, 0, 130)}
-						):Play()
-					end
-				end)
+				
 
 				for _, v in next,list do
 					DropF:Add(v)
@@ -9649,20 +9633,7 @@ Page5.CreateToggle({
 	end,
 }) 
 
-function TPB(CFgo)
-	local tween_s = game:service"TweenService"
-	local info = TweenInfo.new((game:GetService("Workspace").Boats.PirateBrigade.VehicleSeat.CFrame.Position - CFgo.Position).Magnitude/300, Enum.EasingStyle.Linear)
-	tween = tween_s:Create(game:GetService("Workspace").Boats.PirateBrigade.VehicleSeat, info, {CFrame = CFgo})
-	tween:Play()
 
-	local tweenfunc = {}
-
-	function tweenfunc:Stop()
-		tween:Cancel()
-	end
-
-	return tweenfunc
-end
 
 function TPP(CFgo)
 	if game.Players.LocalPlayer.Character:WaitForChild("Humanoid").Health <= 0 or not game:GetService("Players").LocalPlayer.Character:WaitForChild("Humanoid") then tween:Cancel() repeat wait() until game:GetService("Players").LocalPlayer.Character:WaitForChild("Humanoid") and game:GetService("Players").LocalPlayer.Character:WaitForChild("Humanoid").Health > 0 wait(7) return end
@@ -15202,22 +15173,22 @@ Page15.CreateToggle({
             pcall(function()
                 while wait() do
         if game.Workspace._WorldOrigin.Locations:FindFirstChild('Mirage Island') then
-        MirageStatus:Set('๐๏ธ Mirage Island is Spawning')
+        MirageStatus:Set(' Mirage Island is Spawning')
         else
-        MirageStatus:Set('๐๏ธ Mirage Island Not Spawn') 
+        MirageStatus:Set(' Mirage Island Not Spawn') 
         end
           
         if game:GetService("Workspace").Map:FindFirstChild('KitsuneIsland') then
-        KitsuneStatus:Set('โฉ๏ธ Kitsune Island is Spawning')
+        KitsuneStatus:Set(' Kitsune Island is Spawning')
         else
-        KitsuneStatus:Set('โฉ๏ธ Kitsune Island Not Spawn') 
+        KitsuneStatus:Set(' Kitsune Island Not Spawn') 
         end
 
         for i,v in pairs(game.Workspace:GetChildren()) do
         if string.find(v.Name, "Fruit") then
-        FindFruit:Set('๐ Find '..v.Name)
+        FindFruit:Set(' Find '..v.Name)
         else
-        FindFruit:Set('๐ Nothing') 
+        FindFruit:Set(' Nothing') 
         end
         end
                 end
@@ -15229,15 +15200,15 @@ Page15.CreateToggle({
                 pcall(function()
                 if _G.AutoBuyLegendarySword or _G.AutoBuyEnchancementColour then
                         if GetLegendarySwordDealer() then
-                            SwordDealer:Set('โ”๏ธ Legendary Sword Dealer is Spawning')
+                            SwordDealer:Set(' Legendary Sword Dealer is Spawning')
                         else
-                            SwordDealer:Set('โ”๏ธ Legendary Sword Dealer Not Spawn') 
+                            SwordDealer:Set(' Legendary Sword Dealer Not Spawn') 
                         end
                 
                         if game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("CommF_"):InvokeServer("ColorsDealer", "1") then
-                            HakiDealer:Set('๐ข Haki Dealer is Spawning')
+                            HakiDealer:Set('Haki Dealer is Spawning')
                         else
-                            HakiDealer:Set('๐”ด Haki Dealer Not Spawn') 
+                            HakiDealer:Set(' Haki Dealer Not Spawn') 
                             end
                         end
                 end)
