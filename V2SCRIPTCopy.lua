@@ -1309,7 +1309,7 @@ Tabs.Discord:AddParagraph({
                 NameMon = "Serpent Hunter"
                 CFrameQ = CFrame.new(-16665.1914, 104.596405, 1579.69434, 0.877354681, 0, 0.479842514, 0, 1, 0, -0.479842514, 0, 0.877354681)
                 CFrameMon = CFrame.new(-16866, 106, 1549)
-            elseif Lv >=2575 or or SelectArea == "Tiki Outpost" then
+            elseif Lv >=2575 or SelectArea == "Tiki Outpost" then
                 Ms = "Skull Slayer"
                 QuestLv = 2
                 NameQuest = "TikiQuest3"
