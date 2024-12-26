@@ -9649,7 +9649,7 @@ Page5.CreateToggle({
 	end,
 }) 
 
-function TPB(CFgo)
+--[[function TPB(CFgo)
 	local tween_s = game:service"TweenService"
 	local info = TweenInfo.new((game:GetService("Workspace").Boats.PirateBrigade.VehicleSeat.CFrame.Position - CFgo.Position).Magnitude/300, Enum.EasingStyle.Linear)
 	tween = tween_s:Create(game:GetService("Workspace").Boats.PirateBrigade.VehicleSeat, info, {CFrame = CFgo})
@@ -9740,8 +9740,8 @@ end
             end
         )
         
-        
---[[function CheckBoat()
+        --]]
+function CheckBoat()
     for i, v in pairs(game:GetService("Workspace").Boats:GetChildren()) do
         if v.Name == _G.SelectedBoat then
             for _, child in pairs(v:GetChildren()) do
@@ -9753,7 +9753,7 @@ end
     end
     return false
 end
---]]
+
 
     function CheckSeaBeast()
         if game:GetService("Workspace"):FindFirstChild("SeaBeasts") then
@@ -9836,7 +9836,7 @@ function AddEsp(Name, Parent)
     TextLabel.Text = ""
 end
     
-    --[[
+    
     spawn(function()
         while wait() do
             pcall(function()
@@ -9902,8 +9902,8 @@ end
                     end
                 end)
             end)
-            
-            --]]
+         
+           
 
     spawn(function()
         while wait() do
