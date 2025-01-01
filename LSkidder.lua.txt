@@ -6175,68 +6175,143 @@ Module.EquipTool = setmetatable({}, {
     end
 })
 
-local FastAttack = {
-    Range = 60,
-    TargetMobs = true,
-    TargetPlayers = false,
-    Equipped = nil
-}
+local function GetNextTarget(Mode)
+      if (tick() - TargetDebounce) < 2.5 then
+        return NextEnemy
+      end
 
-local RegisterAttackEvent = Net:WaitForChild("RE/RegisterAttack")
-local RegisterHitEvent = Net:WaitForChild("RE/RegisterHit")
-
-local EnemyFolder = Workspace:WaitForChild("Enemies")
-local CharacterFolder = Workspace:WaitForChild("Characters")
-
-local function CollectEnemies(targetList, folder)
-    local selectedTarget = nil
-
-    for _, entity in ipairs(folder:GetChildren()) do
-        local headPart = entity:FindFirstChild("Head")
-
-        if headPart and Module.IsAlive(entity) and Player:DistanceFromCharacter(headPart.Position) < FastAttack.Range then
-            if entity ~= Player.Character then
-                table.insert(targetList, { entity, headPart })
-                selectedTarget = headPart
-            end
+local oldHook;
+      oldHook = hookmetamethod(Player, "__newindex", function(self, index, value)
+        if self.Name == "Humanoid" and index == "WalkSpeed" then
+          return oldHook(self, index, _ENV.WalkSpeedBypass or value)
         end
+        return oldHook(self, index, value)
+      end)
     end
-
-    return selectedTarget
-end
-
-function FastAttack:ExecuteAttack(target, targetList)
-    RegisterAttackEvent:FireServer(_G.FastAttackDelay or 0.05)
-    RegisterHitEvent:FireServer(target, targetList)
-end
-
-function FastAttack:FindAndAttackNearest()
-    local potentialTargets = {}
-
-    local firstTarget = CollectEnemies(potentialTargets, EnemyFolder)
-    local secondTarget = CollectEnemies(potentialTargets, CharacterFolder)
-
-    if #potentialTargets > 0 then
-        self:ExecuteAttack(firstTarget or secondTarget, potentialTargets)
-    else
+    
+    function module:SetTarget(Part)
+      TargetDebounce, NextEnemy = tick(), Part.Parent:FindFirstChild("UpperTorso") or Part
+    end
+    
+    Stepped:Connect(UpdateTarget)
+    
+    local old_namecall; old_namecall = _ENV.original_namecall or hookmetamethod(game, "__namecall", function(self, ...)
+      local Method = string.lower(getnamecallmethod())
+      
+      if Method ~= "fireserver" then
+        return old_namecall(self, ...)
+      end
+      
+      local Name = self.Name
+      
+      if Name == "RE/ShootGunEvent" then
+        local Position, Enemies = ...
+        
+        if typeof(Position) == "Vector3" and type(Enemies) == "table" then
+          local Target = GetNextTarget("AimBot_Gun")
+          
+          if Target then
+            if Target.Name == "UpperTorso" then
+              table.insert(Enemies, Target)
+            end
+            
+            Position = Target.Position
+          end
+          
+          return old_namecall(self, Position, Enemies)
+        end
+      elseif Name == "RemoteEvent" and self.Parent.ClassName == "Tool" then
+        local v1, v2 = ...
+        
+        if typeof(v1) == "Vector3" and not v2 then
+          local Target = GetNextTarget("AimBot_Skills")
+          
+          if Target then
+            return old_namecall(self, Target.Position)
+          end
+        elseif v1 == "TAP" and typeof(v2) == "Vector3" then
+          local Target = GetNextTarget("AimBot_Tap")
+          
+          if Target then
+            return old_namecall(self, "TAP", Target.Position)
+          end
+        end
+      end
+      
+      return old_namecall(self, ...)
+    end)
+    
+    return module
+  end)()
+  
+local RegisterAttack = Net:WaitForChild("RE/RegisterAttack")
+    local ShootGunEvent = Net:WaitForChild("RE/ShootGunEvent")
+    local RegisterHit = Net:WaitForChild("RE/RegisterHit")
+    
+    local EquipTool = Module.EquipTool
+    local IsAlive = Module.IsAlive
+    
+    local function ProcessEnemies(OthersEnemies, Folder)
+      local BasePart = nil;
+      
+      for _, Enemy in Folder:GetChildren() do
+        local Head = Enemy:FindFirstChild("Head")
+        
+        if Head and IsAlive(Enemy) and Player:DistanceFromCharacter(Head.Position) < FastAttack.Distance then
+          if Enemy ~= Player.Character then
+            table.insert(OthersEnemies, { Enemy, Head })
+            BasePart = Head
+          end
+        end
+      end
+      
+      return BasePart
+    end
+    
+    function FastAttack:AttackNearest(ToolTip)
+      local OthersEnemies = {}
+      
+      local Part1 = ProcessEnemies(OthersEnemies, Enemies)
+      local Part2 = ProcessEnemies(OthersEnemies, Characters)
+      
+      if #OthersEnemies > 0 then
+        if ToolTip == "Gun" then
+          local Hits = {}
+          for _, Enemy in ipairs(OthersEnemies) do
+            table.insert(Hits, Enemy[2])
+          end
+          Module.GunClick()
+          for i = 1, 5 do
+            ShootGunEvent:FireServer((Part1 or Part2).Position, Hits)
+          end
+        else
+          RegisterAttack:FireServer(Settings.ClickDelay or 0.05)
+          RegisterHit:FireServer(Part1 or Part2, OthersEnemies)
+        end
+      else
         task.wait(1)
+      end
     end
-end
-
-function FastAttack:HandleBladeHits()
-    local currentTool = Module.IsAlive(Player.Character) and Player.Character:FindFirstChildOfClass("Tool")
-
-    if currentTool and currentTool.ToolTip ~= "Gun" then
-        self:FindAndAttackNearest()
-    else
+    
+    function FastAttack:BladeHits()
+      local Equipped = IsAlive(Player.Character) and Player.Character:FindFirstChildOfClass("Tool")
+      
+      if Equipped then
+        if Equipped.ToolTip == "Gun" and not Settings.FastShoot then
+          return nil
+        end
+        
+        self:AttackNearest(Equipped.ToolTip)
+      else
         task.wait(0.5)
+      end
     end
-end
+    
 
 task.spawn(function()
     while task.wait(_G.FastAttackDelay or 0.125) do
         if _G.FastAttack and not _G.AutoFarmFruitMastery and not _G.AutoFarmGunMastery and (tick() - Module.AttackCooldown) >= 1 then
-            FastAttack:HandleBladeHits()
+            FastAttack:BladeHits()
         end
     end
 end)
